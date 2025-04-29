@@ -13,7 +13,7 @@ A hybrid forecasting system combining retrieval-augmented generation (RAG) with 
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/agentic-time-series-forecasting.git
+git clone https://github.com/basharat0592/agentic-time-series-forecasting.git
 cd agentic-time-series-forecasting
 pip install -r requirements.txt
 ```
