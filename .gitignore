@@ -1,0 +1,69 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+venv/
+.env/
+.envrc
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# VSCode and IDE settings
+.vscode/
+.idea/
+
+# Logs and debug
+*.log
+*.tmp
+
+# Mac and Linux OS files
+.DS_Store
+*.swp
+*~
+
+# Python egg metadata
+*.egg-info/
+.eggs/
+
+# Results and outputs
+results/
+*.png
+*.csv
+*.tex
+
+# Model artifacts
+*.h5
+*.hdf5
+*.pth
+*.ckpt
+*.pt
+
+# PyInstaller
+dist/
+build/
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+
+# Testing
+.pytest_cache/
+
+# Linting
+.pylint.d/
+
+# Cache
+.cache/
