@@ -1,14 +1,30 @@
+Here's the revised `README.md` that reflects your new implementation:
+
+```markdown
 # Agentic RAG Time Series Forecasting
 
-A hybrid forecasting system combining retrieval-augmented generation (RAG) with transformer models for time series prediction.
+A hybrid forecasting system combining retrieval-augmented generation (RAG) with transformer models for time series prediction, featuring validation and optimization agents.
 
-## Features
+## Key Features
 
-- Supports 5 datasets (M4, Electricity, ETTm2, BigData22, Weather)
-- FAISS-based pattern retrieval
-- BART-based forecasting
-- Automated visualization and metrics
-- Graceful fallback mechanisms
+- **Multi-Agent Architecture**:
+  - Forecaster: Retrieves similar patterns using FAISS
+  - Validator: Ensures forecast consistency using phi-2
+  - Optimizer: Refines forecasts based on domain rules
+
+- **Supported Datasets**:
+  - M4 (Monthly)
+  - Electricity (Hourly)
+  - ETTm2 (Monthly)
+  - BigData22 (Monthly)
+  - Weather (Monthly)
+
+- **Advanced Capabilities**:
+  - Pattern retrieval with MiniLM embeddings
+  - LLM-based forecast validation
+  - Context-aware optimization
+  - Automatic metric calculation (MAE, RMSE, MAPE, R²)
+  - Comprehensive visualization
 
 ## Installation
 
@@ -20,52 +36,70 @@ pip install -r requirements.txt
 
 ## Usage
 
+1. Run the demo:
 ```bash
 python run_demo.py
 ```
 
-Follow prompts to:
-1. Select dataset (1-5)
-2. View loaded data
-3. Generate forecasts
-4. See results and metrics
+2. Follow the prompts to:
+   - Select dataset (1-5)
+   - View loaded data
+   - Generate forecasts
+   - See results and metrics
 
 ## Configuration
 
 Edit `config.py` to:
-- Add/modify datasets
-- Change window sizes
-- Adjust forecast steps
-- Switch models
+- Change default target series ID
+- Adjust window sizes and forecast steps
+- Modify validation thresholds
+- Switch between different LLM models
 
-## File Structure
+## System Architecture
 
 ```
-├── datasets_csv/       # Input data
-├── results/           # Outputs
-├── config.py          # Settings
-├── data_loader.py     # Data processing  
-├── agent.py           # Forecasting core
-├── analysis.py        # Visualization
-└── run_demo.py        # Main interface
+├── datasets_csv/       # Input datasets
+├── results/            # Output directory
+│   ├── figures/        # Forecast visualizations
+│   └── tables/         # Performance metrics
+├── agent.py            # Core forecasting logic
+├── analysis.py         # Visualization & metrics
+├── config.py           # System configuration
+├── data_loader.py      # Data preprocessing
+└── run_demo.py         # Command-line interface
 ```
 
-## Requirements
+## Technical Requirements
 
 - Python 3.8+
-- pandas, numpy
-- scikit-learn
-- PyTorch
-- transformers
-- sentence-transformers
-- faiss-cpu
-- matplotlib
-
-## Outputs
-
-- Forecast plots: `results/figures/`
-- Metrics: `results/tables/` (CSV & LaTeX)
+- PyTorch 2.0+
+- CUDA 11.7+ (for GPU acceleration)
+- 8GB+ RAM (16GB recommended for larger datasets)
 
 ## License
 
-MIT
+MIT License
+
+## Citation
+
+If you use this system in your research, please cite:
+
+```bibtex
+@misc{agenticragforecasting,
+  title = {Agentic RAG Time Series Forecasting System},
+  author = {Basharat Hussain},
+  year = {2025},
+  url = {https://github.com/basharat0592/Agentic_RAG_Forecasting}
+}
+```
+
+## Troubleshooting
+
+**Q:** Getting CUDA out of memory errors  
+**A:** Reduce batch size in `config.py` or use smaller window sizes
+
+**Q:** Forecasts seem unrealistic  
+**A:** Adjust validation thresholds in the validator agent
+
+**Q:** Slow performance  
+**A:** Enable GPU acceleration or reduce number of retrieved patterns

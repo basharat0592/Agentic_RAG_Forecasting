@@ -29,7 +29,7 @@ def main():
     choice = input("\nSelect dataset (1-5): ").strip()
     dataset_name = datasets.get(choice, 'm4')
     
-    print(f"\nLoading {dataset_name} dataset...")
+    print(f"\nLoading {dataset_name} dataset (series ID={agent.config.DEFAULT_TARGET_ID})...")
     try:
         data, cfg = data_loader.load_dataset(dataset_name)
         
@@ -41,7 +41,7 @@ def main():
         print(f"\nSelected series with {len(series)} points")
         print(series.head())
         
-        print(f"\nGenerating {cfg['forecast_steps']}-step forecast...")
+        print(f"\nGenerating {cfg['forecast_steps']}-step forecast using Agentic RAG...")
         result = agent.predict(data, dataset_name)
         
         print("\n=== Results ===")

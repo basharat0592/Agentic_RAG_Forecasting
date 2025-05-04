@@ -18,16 +18,13 @@ class DataLoader:
             return None
 
     def _preprocess_data(self, df: pd.DataFrame, cfg: Dict) -> pd.DataFrame:
-        """Clean and prepare the data"""
-        # Handle multi-series data
-        if 'id' in df.columns:
-            # Get the series with most complete data
-            counts = df['id'].value_counts()
-            selected_id = counts.idxmax()
-            df = df[df['id'] == selected_id]
+        """Clean and prepare the data for target_id=0"""
+        # Filter for target_id=0 only
+        if cfg['id_col'] in df.columns:
+            df = df[df[cfg['id_col']] == self.config.DEFAULT_TARGET_ID]
         
         # Set datetime index
-        df = df.set_index(cfg['date_col'])
+        df = df.set_index(cfg['date_col']).sort_index()
         
         # Handle column names
         if cfg['target_col'] not in df.columns:
@@ -42,7 +39,7 @@ class DataLoader:
         return df[[cfg['target_col']]].resample(cfg['freq']).mean().interpolate().ffill().bfill()
 
     def load_dataset(self, name: str) -> Tuple[pd.DataFrame, Dict]:
-        """Load and preprocess specified dataset"""
+        """Load and preprocess specified dataset for target_id=0"""
         if name not in self.config.DATASETS:
             raise ValueError(f"Unknown dataset: {name}")
         

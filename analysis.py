@@ -12,6 +12,7 @@ class ResultsAnalyzer:
         os.makedirs(f"{self.results_dir}/tables", exist_ok=True)
         
         # Configure matplotlib style
+        plt.style.use('seaborn')
         plt.rcParams['figure.facecolor'] = 'white'
         plt.rcParams['axes.grid'] = True
         plt.rcParams['grid.alpha'] = 0.3
@@ -19,16 +20,16 @@ class ResultsAnalyzer:
         plt.rcParams['figure.autolayout'] = True
 
     def plot_results(self, data: pd.Series, result: Dict, dataset_name: str):
-        """Generate comprehensive result visualization"""
+        """Generate comprehensive result visualization with metrics"""
         if 'forecast' not in result:
             print("Error: No forecast in results")
             return None
             
         cfg = self.agent.config.DATASETS[dataset_name]
         
-        fig, ax = plt.subplots(figsize=(14, 8))
+        fig, ax = plt.subplots(figsize=(15, 7))
         
-        # Historical data
+        # Historical data (last 3 windows for context)
         ax.plot(data.index[-3*cfg['window_size']:], 
                data.values[-3*cfg['window_size']:],
                label='Historical Data', linewidth=2, color='#1f77b4')
@@ -42,9 +43,15 @@ class ResultsAnalyzer:
         )[1:]
         
         ax.plot(forecast_dates, result['forecast'],
-               'ro--', label='Forecast', linewidth=2, markersize=8)
+               'ro--', label='Agentic Forecast', linewidth=2, markersize=8)
         
-        ax.set_title(f'{dataset_name.upper()} Forecast\nWindow: {cfg["window_size"]} points | Freq: {freq}',
+        # Add metrics if available
+        if 'metrics' in result:
+            metrics_text = "\n".join([f"{k}: {v:.4f}" for k, v in result['metrics'].items()])
+            ax.text(0.02, 0.95, metrics_text, transform=ax.transAxes,
+                    bbox=dict(facecolor='white', alpha=0.8), verticalalignment='top')
+        
+        ax.set_title(f'{dataset_name.upper()} Forecast - Agentic RAG System\nWindow: {cfg["window_size"]} points | Freq: {freq}',
                    fontsize=14)
         ax.set_xlabel('Date', fontsize=12)
         ax.set_ylabel('Value', fontsize=12)
@@ -85,14 +92,19 @@ class ResultsAnalyzer:
         plot_path = self.plot_results(data, result, dataset_name)
         
         if result['status'] == 'success':
-            actual = data.iloc[-len(result['forecast']):]
-            metrics = self.calculate_metrics(actual, result['forecast'])
-            csv_path, latex_path = self.save_metrics(metrics, dataset_name)
-            
-            return {
-                'plot': plot_path,
-                'metrics': metrics,
-                'csv_path': csv_path,
-                'latex_path': latex_path
-            }
+            # Calculate metrics if we have actual values to compare against
+            if len(data) > len(result['forecast']):
+                actual = data.iloc[-len(result['forecast']):]
+                metrics = self.calculate_metrics(actual, result['forecast'])
+                csv_path, latex_path = self.save_metrics(metrics, dataset_name)
+                
+                # Add metrics to result for display
+                result['metrics'] = metrics
+                
+                return {
+                    'plot': plot_path,
+                    'metrics': metrics,
+                    'csv_path': csv_path,
+                    'latex_path': latex_path
+                }
         return {'plot': plot_path}
